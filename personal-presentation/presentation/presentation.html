@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="ru-RU">
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Гафоров Нурмухаммад">
+  <title>Технология VLAN</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link href="data:text/plain;charset=UTF-8;charset=utf-8,Not%20found%3A%20%2Freveal%2Ejs%404%2E6%2E1%2F%2Fdist%2Freset%2Ecss" rel="stylesheet">
+  <link href="data:text/plain;charset=UTF-8;charset=utf-8,Not%20found%3A%20%2Freveal%2Ejs%404%2E6%2E1%2F%2Fdist%2Freveal%2Ecss" rel="stylesheet">
+  <style>
+.reveal .sourceCode { 
+overflow: visible;
+}
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+  <link href="data:text/plain;charset=UTF-8;charset=utf-8,Not%20found%3A%20%2Freveal%2Ejs%404%2E6%2E1%2F%2Fdist%2Ftheme%2Fbeige%2Ecss" rel="stylesheet" id="theme">
+  
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Технология VLAN</h1>
+  <p class="subtitle">Масштабирование сетей для больших организаций</p>
+  <p class="author">Гафоров Нурмухаммад</p>
+  <p class="institute">Российский университет дружбы народов, Москва,
+Россия</p>
+  <p class="date">27.05.2026</p>
+</section>
+
+<section>
+<section id="введение" class="title-slide slide level1">
+<h1>Введение</h1>
+
+</section>
+<section id="тема-презентации" class="slide level2">
+<h2>Тема презентации</h2>
+<p><strong>Технология VLAN: масштабирование сетей для больших
+организаций</strong></p>
+<p>От базовой сегментации до Q-in-Q и Metro Ethernet: как построить
+гибкую, безопасную и управляемую сеть, которая растет вместе с
+бизнесом.</p>
+</section>
+<section id="что-такое-vlan" class="slide level2">
+<h2>Что такое VLAN</h2>
+<p>VLAN логически делит одну физическую сеть на несколько независимых
+широковещательных доменов.</p>
+<p>Это позволяет:</p>
+<ul>
+<li>изолировать отделы и сервисы друг от друга;</li>
+<li>уменьшать лишний broadcast-трафик;</li>
+<li>быстрее менять структуру сети без перестройки кабельной
+инфраструктуры.</li>
+</ul>
+</section></section>
+<section>
+<section id="базовая-технология-vlan" class="title-slide slide level1">
+<h1>Базовая технология VLAN</h1>
+
+</section>
+<section id="зачем-нужна-сегментация" class="slide level2">
+<h2>Зачем нужна сегментация</h2>
+<p>Без VLAN все устройства в одной локальной сети находятся в общем
+широковещательном домене.</p>
+<p>При росте организации это приводит к проблемам:</p>
+<ul>
+<li>увеличивается объем служебного трафика;</li>
+<li>сложнее разделять пользователей по отделам;</li>
+<li>повышаются риски несанкционированного доступа;</li>
+<li>любые изменения требуют больше ручной настройки.</li>
+</ul>
+</section>
+<section id="основы-802.1q" class="slide level2">
+<h2>Основы 802.1Q</h2>
+<p>Стандарт <strong>802.1Q</strong> добавляет в Ethernet-кадр 4-байтовый
+тег.</p>
+<p>В теге хранятся:</p>
+<ul>
+<li><strong>TPID 0x8100</strong> - идентификатор типа тега;</li>
+<li><strong>PCP</strong> - приоритет трафика;</li>
+<li><strong>CFI/DEI</strong> - служебное поле формата кадра;</li>
+<li><strong>VID</strong> - идентификатор VLAN.</li>
+</ul>
+<p>Именно этот механизм позволяет коммутаторам определять, к какой VLAN
+относится трафик.</p>
+</section>
+<section id="trunk-и-native-vlan" class="slide level2">
+<h2>Trunk и Native VLAN</h2>
+<p>Транковый порт передает несколько VLAN по одному физическому
+каналу.</p>
+<p>Ключевые особенности:</p>
+<ul>
+<li>трафик разных VLAN маркируется тегами 802.1Q;</li>
+<li>native VLAN может передаваться без тегирования;</li>
+<li>trunk-соединения связывают коммутаторы, маршрутизаторы и серверы
+виртуализации;</li>
+<li>802.1Q является базовым языком VLAN-коммутации.</li>
+</ul>
+</section></section>
+<section>
+<section id="масштабирование-vlan" class="title-slide slide level1">
+<h1>Масштабирование VLAN</h1>
+
+</section>
+<section id="когда-vlan-становится-недостаточно" class="slide level2">
+<h2>Когда VLAN становится недостаточно</h2>
+<p>В больших сетях возникает проблема масштаба.</p>
+<p>Ограничения классической VLAN-схемы:</p>
+<ul>
+<li>лимит 4094 доступных VLAN;</li>
+<li>усложнение централизованного управления;</li>
+<li>необходимость передавать множество клиентских сегментов через одну
+физическую среду;</li>
+<li>риск пересечения идентификаторов VLAN у разных клиентов.</li>
+</ul>
+<p>На уровне провайдера или крупной корпорации обычной схемы VLAN уже
+может не хватить.</p>
+</section>
+<section id="q-in-q-туннелирование-vlan" class="slide level2">
+<h2>Q-in-Q: туннелирование VLAN</h2>
+<p><strong>Q-in-Q</strong>, или <strong>802.1ad</strong>, добавляет
+второй VLAN-тег поверх клиентского.</p>
+<p>Схема работы:</p>
+<ul>
+<li>внутренний тег сохраняет сегментацию клиента;</li>
+<li>внешний тег относится к сети оператора;</li>
+<li>несколько клиентских VLAN проходят через одну операторскую
+VLAN;</li>
+<li>клиентские сегменты не смешиваются между собой.</li>
+</ul>
+</section>
+<section id="как-работает-q-in-q" class="slide level2">
+<h2>Как работает Q-in-Q</h2>
+<p>Q-in-Q работает как прозрачный туннель Layer 2.</p>
+<ol type="1">
+<li>На входе провайдер добавляет внешний тег.</li>
+<li>В своей сети оператор обрабатывает только внешний тег.</li>
+<li>На выходе внешний тег удаляется.</li>
+<li>Клиент получает исходный Ethernet-кадр.</li>
+</ol>
+<p>Такой подход удобен для изоляции, безопасной доставки и переноса
+большого числа VLAN через общую инфраструктуру.</p>
+</section></section>
+<section>
+<section id="metro-ethernet-и-l2-сервисы" class="title-slide slide level1">
+<h1>Metro Ethernet и L2-сервисы</h1>
+
+</section>
+<section id="metro-ethernet" class="slide level2">
+<h2>Metro Ethernet</h2>
+<p><strong>Metro Ethernet</strong> предоставляет Ethernet-сервисы в
+масштабе города или региона.</p>
+<p>Часто он строится поверх Q-in-Q, чтобы:</p>
+<ul>
+<li>передавать трафик множества клиентов через единую инфраструктуру
+провайдера;</li>
+<li>создавать L2 VPN между удаленными площадками;</li>
+<li>объединять офисы без сложной перестройки локальных сетей.</li>
+</ul>
+</section>
+<section id="преимущества-metro-ethernet" class="slide level2">
+<h2>Преимущества Metro Ethernet</h2>
+<p>Metro Ethernet используют, когда организациям нужна связность уровня
+L2 между филиалами.</p>
+<p>Основные преимущества:</p>
+<ul>
+<li>высокая пропускная способность;</li>
+<li>низкая задержка;</li>
+<li>удобное объединение филиалов;</li>
+<li>поддержка корпоративных и операторских сервисов;</li>
+<li>сохранение привычной Ethernet-модели для клиента.</li>
+</ul>
+</section></section>
+<section>
+<section id="сравнение-технологий" class="title-slide slide level1">
+<h1>Сравнение технологий</h1>
+
+</section>
+<section id="q-in-q-и-vpls" class="slide level2">
+<h2>Q-in-Q и VPLS</h2>
+<p>Q-in-Q и VPLS решают похожую задачу, но делают это по-разному.</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Критерий</th>
+<th>Q-in-Q</th>
+<th>VPLS</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Транспорт</td>
+<td>Ethernet-туннели</td>
+<td>MPLS-туннели</td>
+</tr>
+<tr class="even">
+<td>Масштабируемость</td>
+<td>Средняя</td>
+<td>Высокая</td>
+</tr>
+<tr class="odd">
+<td>Типовая зона применения</td>
+<td>MAN-сети, уровень доступа</td>
+<td>Ядро сети, большие расстояния</td>
+</tr>
+<tr class="even">
+<td>Инкапсуляция</td>
+<td>Двойной VLAN-тег</td>
+<td>Виртуальная частная L2-сеть</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="совместное-применение" class="slide level2">
+<h2>Совместное применение</h2>
+<p>На практике технологии можно комбинировать.</p>
+<p>Q-in-Q может использоваться внутри MPLS-инфраструктуры оператора как
+удобный механизм доставки клиентского трафика.</p>
+<p>Такой подход позволяет:</p>
+<ul>
+<li>сохранить клиентскую VLAN-сегментацию;</li>
+<li>упростить подключение клиентов к сети оператора;</li>
+<li>масштабировать L2-сервисы на больших расстояниях;</li>
+<li>разделить клиентскую и операторскую логику управления трафиком.</li>
+</ul>
+</section></section>
+<section>
+<section id="практическая-польза" class="title-slide slide level1">
+<h1>Практическая польза</h1>
+
+</section>
+<section id="где-применяется-vlan-q-in-q-и-metro-ethernet" class="slide level2">
+<h2>Где применяется VLAN, Q-in-Q и Metro Ethernet</h2>
+<p>Операторы связи используют Q-in-Q и Metro Ethernet для L2
+VPN-сервисов.</p>
+<p>Крупные корпорации применяют эти технологии для:</p>
+<ul>
+<li>объединения офисов;</li>
+<li>сегментации отделов и сервисов;</li>
+<li>централизованного управления сетью;</li>
+<li>безопасной передачи трафика между площадками;</li>
+<li>эффективного использования существующей инфраструктуры.</li>
+</ul>
+</section>
+<section id="основные-эффекты" class="slide level2">
+<h2>Основные эффекты</h2>
+<p>Главные результаты внедрения VLAN-подхода:</p>
+<ul>
+<li><strong>безопасность</strong> - трафик разных групп
+изолируется;</li>
+<li><strong>масштабируемость</strong> - сеть растет без полной
+перестройки;</li>
+<li><strong>управляемость</strong> - администратор гибко распределяет
+пользователей и сервисы;</li>
+<li><strong>эффективность</strong> - одна физическая инфраструктура
+обслуживает несколько логических сетей;</li>
+<li><strong>гибкость</strong> - филиалы и клиенты подключаются
+быстрее.</li>
+</ul>
+</section></section>
+<section>
+<section id="итог" class="title-slide slide level1">
+<h1>Итог</h1>
+
+</section>
+<section id="vlan-как-фундамент-современных-сетей" class="slide level2">
+<h2>VLAN как фундамент современных сетей</h2>
+<p>Базовые VLAN дают структуру локальной сети.</p>
+<p>802.1Q задает стандарт маркировки Ethernet-кадров.</p>
+<p>Q-in-Q расширяет масштабирование для операторов и крупных
+организаций.</p>
+<p>Metro Ethernet превращает эти механизмы в практическую основу
+городских L2-сервисов.</p>
+</section>
+<section id="вывод" class="slide level2">
+<h2>Вывод</h2>
+<p>VLAN, 802.1Q, Q-in-Q и Metro Ethernet образуют единую технологическую
+цепочку.</p>
+<p>Она позволяет строить сети, которые остаются:</p>
+<ul>
+<li>изолированными;</li>
+<li>управляемыми;</li>
+<li>масштабируемыми;</li>
+<li>удобными для развития бизнеса;</li>
+<li>устойчивыми к росту нагрузки и числа клиентов.</li>
+</ul>
+</section></section>
+    </div>
+  </div>
+
+  <script src="data:text/plain;charset=UTF-8;charset=utf-8,Not%20found%3A%20%2Freveal%2Ejs%404%2E6%2E1%2F%2Fdist%2Freveal%2Ejs"></script>
+
+  <!-- reveal.js plugins -->
+  <script src="data:text/plain;charset=UTF-8;charset=utf-8,Not%20found%3A%20%2Freveal%2Ejs%404%2E6%2E1%2F%2Fplugin%2Fnotes%2Fnotes%2Ejs"></script>
+  <script src="data:text/plain;charset=UTF-8;charset=utf-8,Not%20found%3A%20%2Freveal%2Ejs%404%2E6%2E1%2F%2Fplugin%2Fsearch%2Fsearch%2Ejs"></script>
+  <script src="data:text/plain;charset=UTF-8;charset=utf-8,Not%20found%3A%20%2Freveal%2Ejs%404%2E6%2E1%2F%2Fplugin%2Fzoom%2Fzoom%2Ejs"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: true,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'slide',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'fade',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // reveal.js plugins
+        plugins: [
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>
